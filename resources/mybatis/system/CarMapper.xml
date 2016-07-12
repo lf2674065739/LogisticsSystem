@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CarMapper">
+	
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>  
+    <!--表名 -->
+	<sql id="tableName">
+		"T_CARINFO"
+	</sql>
+	<!-- 字段 -->
+	<sql id="Field">
+		"CARID",
+		"CARNUM",
+		"LICENSEID",
+		"INSURANCEDATE",
+		"DRIVERID",
+		"STATUS"
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{CARID,jdbcType=NUMERIC},
+		#{CARNUM,jdbcType=VARCHAR},
+		#{LICENSEID,jdbcType=VARCHAR},
+		#{INSURANCEDATE,jdbcType=VARCHAR},
+		#{DRIVERID,jdbcType=NUMERIC},
+		#{STATUS,jdbcType=VARCHAR}
+	</sql>
+	
+	
+	<!-- 用户列表(用户组) -->
+	<select id="carListPage" parameterType="page" resultType="pd" useCache="false">
+		select * from t_carinfo
+	</select>
+	
+	<!-- 车辆列表(全部) -->
+	<select id="carList" parameterType="pd" resultType="pd" useCache="false">
+		select * from t_carinfo
+	</select>
+	
+	<!-- 新增车辆 -->
+	<insert id="saveCar" parameterType="pd" >
+		insert into <include refid="tableName"></include> (
+			<include refid="Field"></include>
+		) values (
+			<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!--取最大ID-->
+	<select id="findMaxId" parameterType="pd" resultType="pd">
+		select "MAX"("CARID") "MID" from 
+		<include refid="tableName"></include>
+	</select>
+	
+	<!-- 通过carId获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd" >
+		select 
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		where 
+			"CARID" = #{CARID}
+	</select>
+	
+	<!-- 修改 -->
+	<update id="editCar" parameterType="pd" >
+		update  <include refid="tableName"></include>
+			set	"CARNUM" 					= #{CARNUM},
+				"LICENSEID" 				= #{LICENSEID},
+				"INSURANCEDATE"					= #{INSURANCEDATE},
+				"DRIVERID"					= #{DRIVERID},
+				"STATUS"				= #{STATUS}
+			where 
+				"CARID" = #{CARID}
+	</update>
+	
+	<!-- 删除车辆信息 -->
+	<delete id="deleteCar" parameterType="pd" flushCache="false">
+		delete from <include refid="tableName"></include>
+		where 
+			"CARID" = #{CARID}
+	</delete>
+</mapper>

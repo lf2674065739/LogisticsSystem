@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AppuserMapper1">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		"T_APP_USER"
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		"USERID",
+		"PASSWORD",
+		"NAME",
+		"ROLEID",
+		"LASTTIME",
+		"STATUS",
+		"PHONE",
+		"CARDID",
+		"CARDPHOTOPATH",
+		"LICENSEID",
+		"LICENSEPHOTOPATH",
+		"AREAID",
+		"ORGID",
+		"CHECKIN",
+		"LEGALPERSON",
+		"LEGALPERSONPHONE",
+		"LEGALPERSONCARDID",
+		"LEGALPERSONCARDPHOTOPATH",
+		"LICENSENUM",
+		"LICENSENUMPHOTOPATH",
+		"CARID",
+		"CARLICENSEPHOTOPATH",
+		"CARLICENSEID"
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+	    #{USERID,jdbcType=NUMERIC},
+		#{PASSWORD,jdbcType=VARCHAR},
+		#{NAME,jdbcType=VARCHAR},
+		#{ROLEID,jdbcType=NUMERIC},
+		#{LASTTIME,jdbcType=VARCHAR},
+		#{STATUS,jdbcType=NUMERIC},
+		#{PHONE,jdbcType=VARCHAR},
+		#{CARDID,jdbcType=VARCHAR},
+		#{CARDPHOTOPATH,jdbcType=VARCHAR},
+		#{LICENSEID,jdbcType=VARCHAR},
+		#{LICENSEPHOTOPATH,jdbcType=VARCHAR},
+		#{AREAID,jdbcType=NUMERIC},
+		#{ORGID,jdbcType=NUMERIC},
+		#{CHECKIN,jdbcType=NUMERIC},
+		#{LEGALPERSON,jdbcType=VARCHAR},
+		#{LEGALPERSONPHONE,jdbcType=VARCHAR},
+		#{LEGALPERSONCARDID,jdbcType=VARCHAR},
+		#{LEGALPERSONCARDPHOTOPATH,jdbcType=VARCHAR},
+		#{LICENSENUM,jdbcType=VARCHAR},
+		#{LICENSENUMPHOTOPATH,jdbcType=VARCHAR},
+		#{CARID,jdbcType=NUMERIC},
+		#{CARLICENSEPHOTOPATH,jdbcType=VARCHAR},
+		#{CARLICENSEID,jdbcType=VARCHAR}
+	</sql>
+	
+	<!--取最大ID-->
+	<select id="findMaxId" parameterType="pd" resultType="pd">
+		select "MAX"("USERID") "MID" from 
+		<include refid="tableName"></include>
+	</select>
+	
+	<!-- APP用户列表 -->
+	<select id="appuserlistPage" parameterType="page" resultType="pd">
+		select 
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		order by USERID asc
+	</select>
+	
+	<!-- APP用户列表 -->
+	<select id="findByPhone" resultType="pd">
+		select 
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		where "PHONE" = #{PHONE} and "PASSWORD" = #{PASSWORD}
+	</select>
+	
+	<!-- 新增会员 -->
+	<insert id="saveAppUser" parameterType="pd">
+		insert into <include refid="tableName"></include> (
+			<include refid="Field"></include>
+		) values (
+			<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 修改 -->
+	<update id="editAppUser" parameterType="pd">
+		update  <include refid="tableName"></include>
+			set "CARDPHOTOPATH"				= #{CARDPHOTOPATH}
+			<if test="PHONE != null and PHONE != ''">
+				where "PHONE" = #{PHONE}
+			</if>
+			
+	</update>
+	
+	<!-- 审核修改 -->
+	<update id="editAppUserByCheck" parameterType="pd">
+		update  <include refid="tableName"></include>
+			set "CHECKIN" = #{CHECKIN}
+			<if test="USERID != null and USERID != ''">
+				where "USERID" = #{USERID}
+			</if>
+	</update>
+	
+    <!-- APP用户列表 -->
+	<select id="findByUserId" resultType="pd">
+		select 
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		where "USERID" = #{USERID}
+	</select>
+	 <!-- 通过手机号获取用户的审核状态 -->
+	<select id="getAppUserCheckInByPhone" resultType="pd">
+		select "CHECKIN" from 
+			<include refid="tableName"></include>
+		where "PHONE" = #{PHONE}
+	</select>
+	
+	<!-- 删除用户 -->
+	<delete id="deleteAppUser" parameterType="pd">
+		delete from <include refid="tableName"></include> 
+		where 
+			"USERID" = #{USERID}
+	</delete>
+</mapper>

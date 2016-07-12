@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="reptMapper">
+   <!-- 字段 -->
+	<sql id="Field">
+		"RECEIVINGPARTYID",
+		"RECEIVINGUNIT"
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue" >
+		#{RECEIVINGPARTYID, jdbcType=NUMERIC},
+		#{RECEIVINGUNIT, jdbcType=VARCHAR}
+	</sql>
+	
+	<!--表名 -->
+	<sql id="tableName">
+		T_RECEIVINGPARTY
+	</sql>
+ <select id="reptList" resultType="pd" parameterType="page">
+        
+          select 
+             <include refid="Field"></include>
+           from 
+          <include refid="tableName"></include>
+         
+        </select>
+	  <!-- 新增-->
+	<insert id="savedemo" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	<!-- 删除-->
+	<delete id="deleteU" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			"RECEIVINGPARTYID" = #{RECEIVINGPARTYID}
+	</delete>
+	
+	<!-- 修改 状态-->
+	<update id="update" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			
+			"RECEIVINGUNIT"     =#{RECEIVINGUNIT}
+		where 
+			"RECEIVINGPARTYID"  =#{RECEIVINGPARTYID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			"RECEIVINGPARTYID" = #{RECEIVINGPARTYID}
+	</select>
+	<!--  
+	 列出此组下的角色 
+	<select id="listAllReptsByPId" resultMap="reptResultMap">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where
+			"RECEIVINGPARTYID" = #{RECEIVINGPARTYID}
+		ORDER BY "RECEIVINGPARTYID"
+	</select>
+	-->
+	<!--取最大ID-->
+	<select id="findMaxId" parameterType="pd" resultType="pd">
+		select "MAX"("RECEIVINGPARTYID") "MID" from 
+		<include refid="tableName"></include>
+	</select>
+	</mapper>

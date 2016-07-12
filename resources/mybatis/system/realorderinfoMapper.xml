@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="realorderinfoMapper">
+       <!-- 字段 -->
+	<sql id="Field">
+ 
+         "ORDERID",
+		"ORDERNUM",
+		"CARID",
+        "DRIVERID",
+		"ORDERGOODS",
+		"SHIPPERGOODSWEIGHT",
+		"RECEIPTGOODSWEIGHT",
+		"ORDERCREATEDATE",
+		"ORDERFAILUREDATE",
+		"ORDERSTATUS",
+		"LOGISTICSID",
+		"FREIGHT",
+		"FINISHTIME"
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue" >
+	   #{ORDERID,jdbcType=NUMERIC},
+		#{ORDERNUM,jdbcType=VARCHAR},
+		#{CARID,jdbcType=NUMERIC},
+        #{DRIVERID,jdbcType=NUMERIC},
+		#{ORDERGOODS,jdbcType=VARCHAR},
+		#{SHIPPERGOODSWEIGHT,jdbcType=NUMERIC},
+		#{RECEIPTGOODSWEIGHT,jdbcType=NUMERIC},
+		#{ORDERCREATEDATE,jdbcType=VARCHAR},
+		#{ORDERFAILUREDATE,jdbcType=VARCHAR},
+		#{ORDERSTATUS,jdbcType=VARCHAR},
+		#{LOGISTICSID,jdbcType=NUMERIC},
+		#{FREIGHT,jdbcType=VARCHAR},
+		#{FINISHTIME,jdbcType=DATE}
+	</sql>
+	
+	<!--表名 -->
+	<sql id="tableName">
+   T_REALORDERINFO
+	</sql>
+	
+ <select id="realorderinfoList" resultType="pd" parameterType="page">
+        
+          select 
+             <include refid="Field"></include>
+           from 
+          <include refid="tableName"></include>
+         
+        </select>
+	  <!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+<!-- 修改 状态-->
+	<update id="updateP" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 		                
+		
+		"ORDERNUM"            =         #{ORDERNUM},      
+		"CARID"               =         #{CARID},      
+		"DRIVERID"            =         #{DRIVERID},    
+		"ORDERGOODS"          =   	    #{ORDERGOODS},    
+		 "SHIPPERGOODSWEIGHT" =         #{SHIPPERGOODSWEIGHT},    
+		"RECEIPTGOODSWEIGHT"  =         #{RECEIPTGOODSWEIGHT},    
+		"ORDERCREATEDATE"     =         #{ORDERCREATEDATE},    
+		"ORDERFAILUREDATE"    =         #{ORDERFAILUREDATE},   
+		"ORDERSTATUS"         =         #{ORDERSTATUS},   
+		"LOGISTICSID"         =         #{LOGISTICSID},     
+		"FREIGHT"             =         #{FREIGHT},     
+		"FINISHTIME"          =         #{FINISHTIME}
+		 
+		where 
+			"ORDERID"  =#{ORDERID}
+	</update>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			"ORDERID" = #{ORDERID}
+	</delete>
+	<!--取最大ID-->
+	<select id="findMaxId" parameterType="pd" resultType="pd">
+		select "MAX"("ORDERID") "MID" from 
+		<include refid="tableName"></include>
+	</select>
+ <!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			"ORDERID" = #{ORDERID}
+	</select>
+  
+    </mapper>
